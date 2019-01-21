@@ -8,54 +8,69 @@
 #include "Subsystems/Drivetrain.h"
 #include "RobotMap.h"
 #include "Commands/Drive.h"
+#include "Constants.h"
 //#include <frc/Encoder.h>
 
-Drivetrain::Drivetrain() : Subsystem("Drivetrain") {
-
+Drivetrain::Drivetrain() : Subsystem("Drivetrain")
+{
 }
 
-void Drivetrain::InitDefaultCommand() {
+void Drivetrain::InitDefaultCommand()
+{
   SetDefaultCommand(new commands::Drive());
   // Set the default command for a subsystem here.
   // SetDefaultCommand(new MySpecialCommand());
 }
 
-void Drivetrain::Drive(double left, double right){
-frontLeft->Set(ControlMode::PercentOutput,left);
-frontRight->Set(ControlMode::PercentOutput,right);
+void Drivetrain::Drive(double left, double right)
+{
+  frontLeft->Set(ControlMode::PercentOutput, left);
+  frontRight->Set(ControlMode::PercentOutput, right);
+
 }
 
-double Drivetrain::GetDistance(){
- return (backRight->GetSelectedSensorPosition() + backLeft->GetSelectedSensorPosition(0))/2/160;
+void Drivetrain::TogglePiston(){
+  piston1->Toggle();
+}
+double Drivetrain::GetDistance()
+{
+  return (backRight->GetSelectedSensorPosition() + backLeft->GetSelectedSensorPosition(0)) / 2 / TICKS_PER_REVOLUTION;
 }
 
-double Drivetrain::GetEncoder(){
- return encoder1->GetDistance();
+double Drivetrain::GetEncoder()
+{
+  return encoder1->GetDistance();
 }
 
-void Drivetrain::ResetEncoders(){
-  backRight->SetSelectedSensorPosition(0,0,0);
-  backLeft->SetSelectedSensorPosition(0,0,0);
+void Drivetrain::ResetEncoders()
+{
+  backRight->SetSelectedSensorPosition(0, 0, 0);
+  backLeft->SetSelectedSensorPosition(0, 0, 0);
 }
 
-void Drivetrain::InitHardware(){
+void Drivetrain::InitHardware()
+{
   //add values to robotmap
   frontLeft = new CANTalon(DRIVE_LEFT_FRONT);
-  frontRight = new CANTalon( DRIVE_RIGHT_FRONT);
+  frontRight = new CANTalon(DRIVE_RIGHT_FRONT);
   backLeft = new CANTalon(DRIVE_LEFT_BACK);
   backRight = new CANTalon(DRIVE_RIGHT_BACK);
 
- encoder1 = new frc::Encoder(9,9);//,false,frc::CounterBase::k4X);
+  piston1 = new PistonDouble(PISTON_PORT_ONE,PISTON_PORT_TWO);
+ 
+ 
 
-frontLeft->SetInverted(true);
-backLeft->SetInverted(true);
+  encoder1 = new frc::Encoder(9, 9); //,false,frc::CounterBase::k4X);
 
-backLeft->Set(ControlMode::Follower,frontLeft->GetDeviceID());
-backRight->Set(ControlMode::Follower,frontRight->GetDeviceID());
+  frontLeft->SetInverted(true);
+  backLeft->SetInverted(true);
 
-backRight->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder,0,0);
-backLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder,0,0);
-frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder,0,0);
+  backLeft->Set(ControlMode::Follower, frontLeft->GetDeviceID());
+  backRight->Set(ControlMode::Follower, frontRight->GetDeviceID());
+
+  backRight->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  backLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 }
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

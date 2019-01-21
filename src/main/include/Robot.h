@@ -18,18 +18,17 @@
 #include <networktables/NetworkTableInstance.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/shuffleboard/Shuffleboardtab.h>
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   nt::NetworkTableEntry xEntry;
   nt::NetworkTableEntry yEntry;
   nt::NetworkTableEntry InchesToGoForward;
 
- // shuffleboard::Shuffleboardtab x;
-  
+  // shuffleboard::Shuffleboardtab x;
 
   double x;
   double y;
-
 
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -41,12 +40,13 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
   void UpdateStatus();
- private:
+
+private:
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
-frc::Compressor* c;
+  frc::Compressor *c;
 
-  frc::Command* m_autonomousCommand = nullptr;
+  frc::Command *m_autonomousCommand = nullptr;
 
-  frc::SendableChooser<frc::Command*> m_chooser;
+  frc::SendableChooser<frc::Command *> m_chooser;
 };

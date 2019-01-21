@@ -9,6 +9,7 @@
 
 #include <frc/WPILib.h>
 #include "Commands/EncoderReset.h"
+#include "Commands/PistonToggle.h"
 OI::OI() {
 
   }
@@ -22,8 +23,10 @@ OI::OI() {
   }  
   void OI::InitHardware(){
     leftButton7 = new frc::JoystickButton(&leftJoystick,7);
+    leftButton6 = new frc::JoystickButton(&leftJoystick,6);
 
     leftButton7->WhenPressed(new EncoderReset());
+    leftButton6->WhenPressed(new PistonToggle());
   }
   // Process operator interface input here.
 

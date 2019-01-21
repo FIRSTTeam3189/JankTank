@@ -5,33 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Commands/GoForwardEncoder.h"
-#include "Constants.h"
-GoForwardEncoder::GoForwardEncoder(double inputDistance) : CommandBase("GoForwardEncoder") {
+#include "Commands/PistonToggle.h"
+
+PistonToggle::PistonToggle() : CommandBase("PistonToggle") {
   Requires(CommandBase::drivetrain.get());
-  this->desiredDistance = inputDistance;
   // Use Requires() here to declare subsystem dependencies
   // eg. Requires(Robot::chassis.get());
 }
 
 // Called just before this Command runs the first time
-void GoForwardEncoder::Initialize() {}
+void PistonToggle::Initialize() {
+  drivetrain->TogglePiston();
+}
 
 // Called repeatedly when this Command is scheduled to run
-void GoForwardEncoder::Execute() {
-  CommandBase::drivetrain->Drive(AUTO_FORWARD_SPEED,AUTO_FORWARD_SPEED);
-}
+void PistonToggle::Execute() {}
 
 // Make this return true when this Command no longer needs to run execute()
-bool GoForwardEncoder::IsFinished() { return desiredDistance <= CommandBase::drivetrain->GetDistance(); }
+bool PistonToggle::IsFinished() { return true; }
 
 // Called once after isFinished returns true
-void GoForwardEncoder::End() {
-  CommandBase::drivetrain->Drive(0,0);
-}
+void PistonToggle::End() {}
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void GoForwardEncoder::Interrupted() {
-  CommandBase::drivetrain->Drive(0,0);
-}
+void PistonToggle::Interrupted() {}

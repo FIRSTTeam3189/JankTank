@@ -9,32 +9,33 @@
 
 #include <frc/Commands/Scheduler.h>
 #include <frc/SmartDashboard/SmartDashboard.h>
-#include"CommandBase.h"
+#include "CommandBase.h"
+#include <pathfinder.h>
+#include <frc/SerialPort.h>
 
+void Robot::RobotInit()
+{
 
-
-void Robot::RobotInit() {
-  
   CommandBase::drivetrain->InitHardware();
   CommandBase::oi->InitHardware();
   c = new frc::Compressor(0);
 
-	c->SetClosedLoopControl(false);
+  c->SetClosedLoopControl(true);
 
   Robot::x = 0;
   Robot::y = 0;
 
-  frc::ShuffleboardTab& tab =  frc::Shuffleboard::GetTab("SmartDashboard");
-  
-  tab.AddPersistent("test",1.0);
+  frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("SmartDashboard");
 
-
+  tab.AddPersistent("test", 1.0);
 
   auto inst = nt::NetworkTableInstance::GetDefault();
   auto table = inst.GetTable("datatable");
 
   xEntry = table->GetEntry("X");
   yEntry = table->GetEntry("Y");
+
+  // frc::SerialPort::SerialPort port = new SerialPort::SerialPort(2,kOnboard,8,kParity_None,kStopBits_One)
 }
 
 /**
@@ -54,10 +55,11 @@ void Robot::RobotPeriodic() {}
  */
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() { 
+void Robot::DisabledPeriodic()
+{
   frc::Scheduler::GetInstance()->Run();
   UpdateStatus();
-   }
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -70,7 +72,8 @@ void Robot::DisabledPeriodic() {
  * chooser code above (like the commented example) or additional comparisons to
  * the if-else structure below with additional strings & commands.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
   // std::string autoSelected = frc::SmartDashboard::GetString(
   //     "Auto Selector", "Default");
   // if (autoSelected == "My Auto") {
@@ -79,51 +82,50 @@ void Robot::AutonomousInit() {
   //   m_autonomousCommand = &m_defaultAuto;
   // }
 
-
-
   m_autonomousCommand = m_chooser.GetSelected();
 
-  if (m_autonomousCommand != nullptr) {
+  if (m_autonomousCommand != nullptr)
+  {
     m_autonomousCommand->Start();
   }
 }
 
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TeleopInit() {
+void Robot::TeleopInit()
+{
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  if (m_autonomousCommand != nullptr) {
+  if (m_autonomousCommand != nullptr)
+  {
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
 }
 
-void Robot::TeleopPeriodic() { 
+void Robot::TeleopPeriodic()
+{
   frc::Scheduler::GetInstance()->Run();
   UpdateStatus();
- // xEntry.setDouble("test",x);
+  // xEntry.setDouble("test",x);
   yEntry.SetDouble(y);
   xEntry.SetDouble(x);
 
-  
-
   x += 0.05;
   y += 1.0;
-   }
+}
 
 void Robot::TestPeriodic() {}
 
-void Robot::UpdateStatus() {
-frc::SmartDashboard::PutNumber("left Y ", CommandBase::oi->getLeftY());
-frc::SmartDashboard::PutNumber("left quadratic ",CommandBase::oi->getLeftY()*fabs(CommandBase::oi->getLeftY()));
-frc::SmartDashboard::PutNumber("encoders",CommandBase::drivetrain->GetDistance());
-frc::SmartDashboard::PutNumber("Dev's special encoder buddy",CommandBase::drivetrain->GetEncoder());
-
+void Robot::UpdateStatus()
+{
+  frc::SmartDashboard::PutNumber("left Y ", CommandBase::oi->getLeftY());
+  frc::SmartDashboard::PutNumber("left quadratic ", CommandBase::oi->getLeftY() * fabs(CommandBase::oi->getLeftY()));
+  frc::SmartDashboard::PutNumber("encoders", CommandBase::drivetrain->GetDistance());
+  frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());
 }
-
 
 #ifndef RUNNING_FRC_TESTS
 START_ROBOT_CLASS(Robot)
