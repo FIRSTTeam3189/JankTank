@@ -7,18 +7,19 @@
 
 #pragma once
 
-#include <frc/Commands/Command.h>
+#include <frc/commands/Command.h>
 #include "CommandBase.h"
 
 namespace commands {
-  class Drive : public CommandBase {
-  public:
-    Drive();
-    void Initialize() override;
-    void Execute() override;
-    bool IsFinished() override;
-    void End() override;
-    void Interrupted() override;
+class TankDrive : public CommandBase
+{
+public:
+  TankDrive();
+  void Initialize() override;
+  void Execute() override;
+  bool IsFinished() override;
+  void End() override;
+  void Interrupted() override;
   };
 }
  

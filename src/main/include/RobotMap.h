@@ -12,8 +12,10 @@ constexpr int DRIVE_RIGHT_BACK = 5;
 constexpr int DRIVE_LEFT_FRONT = 1;
 constexpr int DRIVE_LEFT_BACK = 2;
 
-constexpr int PISTON_PORT_ONE = 2;
-constexpr int PISTON_PORT_TWO = 3;
+constexpr int PISTON_BACK_RETRACT = 2;
+constexpr int PISTON_BACK_EXTEND = 3;
+constexpr int PISTON_FRONT_RETRACT = 2;
+constexpr int PISTON_FRONT_EXTEND = 3;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into

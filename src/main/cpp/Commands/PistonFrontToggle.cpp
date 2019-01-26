@@ -5,28 +5,29 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Commands/PistonToggle.h"
+#include "Commands/PistonFrontToggle.h"
 
-PistonToggle::PistonToggle() : CommandBase("PistonToggle") {
+PistonFrontToggle::PistonFrontToggle() : CommandBase("PistonFrontToggle") {
   Requires(CommandBase::drivetrain.get());
   // Use Requires() here to declare subsystem dependencies
   // eg. Requires(Robot::chassis.get());
 }
 
 // Called just before this Command runs the first time
-void PistonToggle::Initialize() {
-  drivetrain->TogglePiston();
+void PistonFrontToggle::Initialize()
+{
+  drivetrain->ToggleFrontPistons();
 }
 
 // Called repeatedly when this Command is scheduled to run
-void PistonToggle::Execute() {}
+void PistonFrontToggle::Execute() {}
 
 // Make this return true when this Command no longer needs to run execute()
-bool PistonToggle::IsFinished() { return true; }
+bool PistonFrontToggle::IsFinished() { return true; }
 
 // Called once after isFinished returns true
-void PistonToggle::End() {}
+void PistonFrontToggle::End() {}
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void PistonToggle::Interrupted() {}
+void PistonFrontToggle::Interrupted() {}

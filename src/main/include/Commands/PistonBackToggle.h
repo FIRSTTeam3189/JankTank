@@ -7,19 +7,14 @@
 
 #pragma once
 
-#include <frc/Joystick.h>
-#include <frc/buttons/JoystickButton.h>
-class OI {
+#include <frc/commands/Command.h>
+#include "CommandBase.h"
+class PistonBackToggle : public CommandBase {
  public:
-  OI();
-  void InitHardware();
-  double getRightY();
-  double getLeftY();
-  private:
-  	frc::Joystick leftJoystick { 0 };
-    frc::Joystick rightJoystick {1};
-
-    frc::JoystickButton *leftButton8;
-    frc::JoystickButton* leftButton7;
-    frc::JoystickButton* leftButton6;
+  PistonBackToggle();
+  void Initialize() override;
+  void Execute() override;
+  bool IsFinished() override;
+  void End() override;
+  void Interrupted() override;
 };

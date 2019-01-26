@@ -9,9 +9,9 @@
 
 #include <frc/commands/Command.h>
 #include "CommandBase.h"
-class PistonToggle : public CommandBase {
+class PistonFrontToggle : public CommandBase {
  public:
-  PistonToggle();
+  PistonFrontToggle();
   void Initialize() override;
   void Execute() override;
   bool IsFinished() override;

@@ -22,7 +22,8 @@ private:
   CANTalon *frontRight;
   CANTalon *backLeft;
   CANTalon *backRight;
- Piston *piston1;
+ Piston *back_pistons;
+ Piston *front_pistons;
   frc::Solenoid* solenoid1;
 
   frc::Encoder *encoder1;
@@ -33,7 +34,8 @@ public:
   void Drive(double left, double right);
   double GetDistance();
   double GetEncoder();
-  void TogglePiston();
+  void ToggleBackPistons();
+  void ToggleFrontPistons();
   void ResetEncoders();
   void InitHardware();
 };

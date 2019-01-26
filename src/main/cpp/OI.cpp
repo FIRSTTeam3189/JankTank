@@ -9,7 +9,8 @@
 
 #include <frc/WPILib.h>
 #include "Commands/EncoderReset.h"
-#include "Commands/PistonToggle.h"
+#include "Commands/PistonBackToggle.h"
+#include "Commands/PistonFrontToggle.h"
 OI::OI() {
 
   }
@@ -22,11 +23,13 @@ OI::OI() {
     return rightJoystick.GetY(frc::GenericHID::JoystickHand::kRightHand);
   }  
   void OI::InitHardware(){
+    leftButton7 = new frc::JoystickButton(&leftJoystick, 8);
     leftButton7 = new frc::JoystickButton(&leftJoystick,7);
     leftButton6 = new frc::JoystickButton(&leftJoystick,6);
 
+    leftButton8->WhenPressed(new PistonFrontToggle());
     leftButton7->WhenPressed(new EncoderReset());
-    leftButton6->WhenPressed(new PistonToggle());
+    leftButton6->WhenPressed(new PistonBackToggle());
   }
   // Process operator interface input here.
 

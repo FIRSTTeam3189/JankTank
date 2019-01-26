@@ -7,8 +7,7 @@
 
 #include "Robot.h"
 
-#include <frc/Commands/Scheduler.h>
-#include <frc/SmartDashboard/SmartDashboard.h>
+#include <frc/commands/Scheduler.h>
 #include "CommandBase.h"
 #include <pathfinder.h>
 #include <frc/SerialPort.h>
@@ -82,8 +81,6 @@ void Robot::AutonomousInit()
   //   m_autonomousCommand = &m_defaultAuto;
   // }
 
-  m_autonomousCommand = m_chooser.GetSelected();
-
   if (m_autonomousCommand != nullptr)
   {
     m_autonomousCommand->Start();
@@ -121,10 +118,10 @@ void Robot::TestPeriodic() {}
 
 void Robot::UpdateStatus()
 {
-  frc::SmartDashboard::PutNumber("left Y ", CommandBase::oi->getLeftY());
+  /*frc::SmartDashboard::PutNumber("left Y ", CommandBase::oi->getLeftY());
   frc::SmartDashboard::PutNumber("left quadratic ", CommandBase::oi->getLeftY() * fabs(CommandBase::oi->getLeftY()));
   frc::SmartDashboard::PutNumber("encoders", CommandBase::drivetrain->GetDistance());
-  frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());
+  frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());*/
 }
 
 #ifndef RUNNING_FRC_TESTS

@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <frc/Commands/Command.h>
-#include <frc/SmartDashboard/SendableChooser.h>
+#include <frc/commands/Command.h>
 #include <frc/TimedRobot.h>
 #include <frc/Compressor.h>
 
@@ -17,7 +16,7 @@
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
 #include <frc/shuffleboard/Shuffleboard.h>
-#include <frc/shuffleboard/Shuffleboardtab.h>
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -47,6 +46,4 @@ private:
   frc::Compressor *c;
 
   frc::Command *m_autonomousCommand = nullptr;
-
-  frc::SendableChooser<frc::Command *> m_chooser;
 };
