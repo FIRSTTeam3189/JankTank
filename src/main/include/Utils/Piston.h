@@ -8,7 +8,6 @@
 #ifndef PISTON_H_
 #define PISTON_H_
 
-#include <WPILib.h>
 #include <frc/Solenoid.h>
 
 struct PistonData{

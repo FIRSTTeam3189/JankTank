@@ -9,10 +9,14 @@
 #include "RobotMap.h"
 #include "Commands/TankDrive.h"
 #include "Constants.h"
-//#include <frc/Encoder.h>
+#include <frc/Encoder.h>
 
 Drivetrain::Drivetrain() : Subsystem("Drivetrain")
-{
+{/**
+     frc::ShuffleboardTab::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drive");
+ nt::NetworkTableEntry maxSpeed =
+      tab.Add("Max Speed", 1)
+         .GetEntry();*/
 }
 
 void Drivetrain::InitDefaultCommand()
@@ -40,18 +44,18 @@ void Drivetrain::ToggleFrontPistons()
 
 double Drivetrain::GetDistance()
 {
-  return (backRight->GetSelectedSensorPosition() + backLeft->GetSelectedSensorPosition(0)) / 2 / TICKS_PER_REVOLUTION;
+ // return (backRight->GetSelectedSensorPosition() + backLeft->GetSelectedSensorPosition(0)) / 2 / TICKS_PER_REVOLUTION;
 }
 
 double Drivetrain::GetEncoder()
 {
-  return encoder1->GetDistance();
+//  return encoder1->GetDistance();
 }
 
 void Drivetrain::ResetEncoders()
 {
-  backRight->SetSelectedSensorPosition(0, 0, 0);
-  backLeft->SetSelectedSensorPosition(0, 0, 0);
+ // backRight->SetSelectedSensorPosition(0, 0, 0);
+//  backLeft->SetSelectedSensorPosition(0, 0, 0);
 }
 
 void Drivetrain::InitHardware()
@@ -65,7 +69,7 @@ void Drivetrain::InitHardware()
   back_pistons = new PistonDouble(PISTON_BACK_EXTEND, PISTON_BACK_RETRACT);
   front_pistons = new PistonDouble(PISTON_FRONT_EXTEND, PISTON_FRONT_RETRACT);
 
-  encoder1 = new frc::Encoder(9, 9); //,false,frc::CounterBase::k4X);
+  //encoder1 = new frc::Encoder(9, 9); //,false,frc::CounterBase::k4X);
 
   frontLeft->SetInverted(true);
   backLeft->SetInverted(true);
@@ -73,9 +77,9 @@ void Drivetrain::InitHardware()
   backLeft->Set(ControlMode::Follower, frontLeft->GetDeviceID());
   backRight->Set(ControlMode::Follower, frontRight->GetDeviceID());
 
-  backRight->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-  backLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-  frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  //backRight->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  //backLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  //frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 }
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

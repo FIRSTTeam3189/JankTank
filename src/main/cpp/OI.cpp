@@ -23,13 +23,13 @@ OI::OI() {
     return rightJoystick.GetY(frc::GenericHID::JoystickHand::kRightHand);
   }  
   void OI::InitHardware(){
-    leftButton7 = new frc::JoystickButton(&leftJoystick, 8);
+    leftButton8 = new frc::JoystickButton(&leftJoystick, 8);
     leftButton7 = new frc::JoystickButton(&leftJoystick,7);
     leftButton6 = new frc::JoystickButton(&leftJoystick,6);
 
     leftButton8->WhenPressed(new PistonFrontToggle());
-    leftButton7->WhenPressed(new EncoderReset());
-    leftButton6->WhenPressed(new PistonBackToggle());
+    leftButton6->WhenPressed(new EncoderReset());
+    leftButton7->WhenPressed(new PistonBackToggle());
   }
   // Process operator interface input here.
 

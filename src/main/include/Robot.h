@@ -10,6 +10,7 @@
 #include <frc/commands/Command.h>
 #include <frc/TimedRobot.h>
 #include <frc/Compressor.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "OI.h"
 #include <networktables/NetworkTable.h>
@@ -43,6 +44,10 @@ public:
 private:
   // Have it null by default so that if testing teleop it
   // doesn't have undefined behavior and potentially crash.
+
+frc::ShuffleboardTab& tab = frc::Shuffleboard::GetTab("SmartDashboard");
+nt::NetworkTableEntry testEntry;
+
   frc::Compressor *c;
 
   frc::Command *m_autonomousCommand = nullptr;

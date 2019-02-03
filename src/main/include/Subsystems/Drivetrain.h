@@ -11,6 +11,10 @@
 #include <frc/Encoder.h>
 #include "Utils/Piston.h"
 #include <frc/Solenoid.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
+#include <networktables/NetworkTableInstance.h>
 using CANTalon = ctre::phoenix::motorcontrol::can::TalonSRX;
 using ControlMode = ctre::phoenix::motorcontrol::ControlMode;
 class Drivetrain : public frc::Subsystem
@@ -26,7 +30,11 @@ private:
  Piston *front_pistons;
   frc::Solenoid* solenoid1;
 
-  frc::Encoder *encoder1;
+//  frc::ShuffleboardTab::ShuffleboardTab tab;
+ // nt::NetworkTableEntry x;
+
+
+ // frc::Encoder *encoder1;
 
 public:
   Drivetrain();

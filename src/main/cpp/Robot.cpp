@@ -11,12 +11,16 @@
 #include "CommandBase.h"
 #include <pathfinder.h>
 #include <frc/SerialPort.h>
+#include <iostream>
+
+ 
 
 void Robot::RobotInit()
 {
 
   CommandBase::drivetrain->InitHardware();
   CommandBase::oi->InitHardware();
+  std::cout << "test";
   c = new frc::Compressor(0);
 
   c->SetClosedLoopControl(true);
@@ -24,15 +28,16 @@ void Robot::RobotInit()
   Robot::x = 0;
   Robot::y = 0;
 
-  frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("SmartDashboard");
-
-  tab.AddPersistent("test", 1.0);
+ 
+  testEntry = tab.AddPersistent("test", 1.0).GetEntry();
 
   auto inst = nt::NetworkTableInstance::GetDefault();
   auto table = inst.GetTable("datatable");
 
   xEntry = table->GetEntry("X");
   yEntry = table->GetEntry("Y");
+
+  
 
   // frc::SerialPort::SerialPort port = new SerialPort::SerialPort(2,kOnboard,8,kParity_None,kStopBits_One)
 }
@@ -122,6 +127,8 @@ void Robot::UpdateStatus()
   frc::SmartDashboard::PutNumber("left quadratic ", CommandBase::oi->getLeftY() * fabs(CommandBase::oi->getLeftY()));
   frc::SmartDashboard::PutNumber("encoders", CommandBase::drivetrain->GetDistance());
   frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());*/
+ // testEntry.SetDouble(420.6969);
+  frc::SmartDashboard::PutNumber("MURDER!!!",testEntry.GetDouble(0));
 }
 
 #ifndef RUNNING_FRC_TESTS
