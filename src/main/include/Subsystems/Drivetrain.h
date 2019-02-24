@@ -46,4 +46,7 @@ public:
   void ToggleFrontPistons();
   void ResetEncoders();
   void InitHardware();
+  void DriveDistance(double distanceL, double distanceR);
+  double GetEncoderLeftDistance();
+  double GetEncoderRightDistance();
 };

@@ -29,6 +29,7 @@ public:
 
   double x;
   double y;
+  int tickCount; // This is used to have debug outputs occur only every few updates.
 
   void RobotInit() override;
   void RobotPeriodic() override;

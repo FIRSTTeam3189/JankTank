@@ -4,20 +4,26 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 #pragma once
 
-#include <frc/commands/Command.h>
-#include "CommandBase.h"
-class GoForwardEncoder : public CommandBase {
+#include <frc/commands/Subsystem.h>
+#include "Utils/Piston.h"
+
+class Climber : public frc::Subsystem {
+ private:
+  PistonDouble* frontRightPiston;
+  PistonDouble* backRightPiston;
+  // It's desirable that everything possible under private except
+  // for methods that implement subsystem capabilities
+
  public:
-  GoForwardEncoder(double);
-  void Initialize() override;
-  void Execute() override;
-  bool IsFinished() override;
-  void End() override;
-  void Interrupted() override;
-  double desiredDistance;
-  double desiredDistanceL;
-  double desiredDistanceR;
+  Climber();
+  void InitDefaultCommand() override;
+  void PistonsBackExtend();
+  void PistonsFrontExtend();
+  void PistonsFrontRetract();
+  void PistonsBackRetract();
+  void InitHardware();
 };
+*/

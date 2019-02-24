@@ -13,34 +13,33 @@
 #include <frc/SerialPort.h>
 #include <iostream>
 
- 
-
 void Robot::RobotInit()
 {
+  std::cout << "Robot initializing..." << std::endl;
 
+  //  Initialize subsystem hardware
   CommandBase::drivetrain->InitHardware();
   CommandBase::oi->InitHardware();
-  std::cout << "test";
-  c = new frc::Compressor(0);
+  //std::cout << "test";
 
+  //  Setup the compressor
+  c = new frc::Compressor(0);
   c->SetClosedLoopControl(true);
 
+  //  Whatever this is.
   Robot::x = 0;
   Robot::y = 0;
-
  
+  //  SmartDashBoard testing here
   testEntry = tab.AddPersistent("test", 1.0).GetEntry();
-
   auto inst = nt::NetworkTableInstance::GetDefault();
   auto table = inst.GetTable("datatable");
 
   xEntry = table->GetEntry("X");
   yEntry = table->GetEntry("Y");
-
-  
-
   // frc::SerialPort::SerialPort port = new SerialPort::SerialPort(2,kOnboard,8,kParity_None,kStopBits_One)
-}
+  std::cout << "Robot initialization finished." << std::endl;
+} // End RobotInit
 
 /**
  * This function is called every robot packet, no matter the mode. Use
@@ -50,7 +49,15 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  tickCount++;
+  if (tickCount == 25)
+  { // Only update every few ticks. Note that each tick is ~20ms.
+    std::cout << "\nLeft Encoder: " << CommandBase::drivetrain->GetEncoderLeftDistance() << std::endl;
+    std::cout << "Right Encoder: "  << CommandBase::drivetrain->GetEncoderRightDistance() << std::endl;
+    tickCount = 0;
+  }
+} // End RobotPeriodic
 
 /**
  * This function is called once each time the robot enters Disabled mode. You
@@ -63,7 +70,7 @@ void Robot::DisabledPeriodic()
 {
   frc::Scheduler::GetInstance()->Run();
   UpdateStatus();
-}
+} // End DisabledPeriodic
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -90,7 +97,7 @@ void Robot::AutonomousInit()
   {
     m_autonomousCommand->Start();
   }
-}
+} // End AutonomousInit
 
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
@@ -105,7 +112,9 @@ void Robot::TeleopInit()
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
-}
+
+  std::cout << "Teleop initialized." << std::endl;
+} // End TeleopInit
 
 void Robot::TeleopPeriodic()
 {
@@ -117,7 +126,7 @@ void Robot::TeleopPeriodic()
 
   x += 0.05;
   y += 1.0;
-}
+} // End TeleopPeriodic
 
 void Robot::TestPeriodic() {}
 
@@ -129,7 +138,7 @@ void Robot::UpdateStatus()
   frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());*/
  // testEntry.SetDouble(420.6969);
   frc::SmartDashboard::PutNumber("MURDER!!!",testEntry.GetDouble(0));
-}
+} // End UpdateStatus
 
 #ifndef RUNNING_FRC_TESTS
 START_ROBOT_CLASS(Robot)

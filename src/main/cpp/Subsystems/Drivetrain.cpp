@@ -12,7 +12,7 @@
 #include <frc/Encoder.h>
 
 Drivetrain::Drivetrain() : Subsystem("Drivetrain")
-{/**
+{ /**
      frc::ShuffleboardTab::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drive");
  nt::NetworkTableEntry maxSpeed =
       tab.Add("Max Speed", 1)
@@ -28,58 +28,76 @@ void Drivetrain::InitDefaultCommand()
 
 void Drivetrain::Drive(double left, double right)
 {
-  frontLeft->Set(ControlMode::PercentOutput, left);
+  frontLeft-> Set(ControlMode::PercentOutput, left);
   frontRight->Set(ControlMode::PercentOutput, right);
 }
 
-void Drivetrain::ToggleBackPistons()
-{
-  back_pistons->Toggle();
-}
+//  Toggle the front or back pistons between (retracted / extended)
+void Drivetrain::ToggleBackPistons() {back_pistons->Toggle();}
+void Drivetrain::ToggleFrontPistons() {front_pistons->Toggle();}
 
-void Drivetrain::ToggleFrontPistons()
-{
-  front_pistons->Toggle();
-}
-
-double Drivetrain::GetDistance()
-{
- // return (backRight->GetSelectedSensorPosition() + backLeft->GetSelectedSensorPosition(0)) / 2 / TICKS_PER_REVOLUTION;
-}
-
-double Drivetrain::GetEncoder()
-{
-//  return encoder1->GetDistance();
-}
+//  Return the current encoder values for L and R encoders
+double Drivetrain::GetEncoderLeftDistance(){return frontLeft->GetSelectedSensorPosition(0);}
+double Drivetrain::GetEncoderRightDistance(){return frontRight->GetSelectedSensorPosition(0);}
 
 void Drivetrain::ResetEncoders()
-{
- // backRight->SetSelectedSensorPosition(0, 0, 0);
-//  backLeft->SetSelectedSensorPosition(0, 0, 0);
+{ // Set Left and Right encoders to a known value (usually 0)
+  frontRight->SetSelectedSensorPosition(0, 0, 0);
+  frontLeft-> SetSelectedSensorPosition(0, 0, 0);
+}
+
+void Drivetrain::DriveDistance(double distanceL, double distanceR){
+  // Drive the Left- and Right-side drivetrain motors for the desired encoder counts
+  frontLeft-> Set(ControlMode::Position,distanceL);
+  frontRight->Set(ControlMode::Position,distanceR);
 }
 
 void Drivetrain::InitHardware()
 {
-  //add values to robotmap
-  frontLeft = new CANTalon(DRIVE_LEFT_FRONT);
-  frontRight = new CANTalon(DRIVE_RIGHT_FRONT);
-  backLeft = new CANTalon(DRIVE_LEFT_BACK);
-  backRight = new CANTalon(DRIVE_RIGHT_BACK);
+  //  Add values to robotmap
+  frontLeft =   new CANTalon(DRIVE_LEFT_FRONT);
+  frontRight =  new CANTalon(DRIVE_RIGHT_FRONT);
+  backLeft =    new CANTalon(DRIVE_LEFT_BACK);
+  backRight =   new CANTalon(DRIVE_RIGHT_BACK);
 
-  back_pistons = new PistonDouble(PISTON_BACK_EXTEND, PISTON_BACK_RETRACT);
+  back_pistons =  new PistonDouble(PISTON_BACK_EXTEND, PISTON_BACK_RETRACT);
   front_pistons = new PistonDouble(PISTON_FRONT_EXTEND, PISTON_FRONT_RETRACT);
 
-  //encoder1 = new frc::Encoder(9, 9); //,false,frc::CounterBase::k4X);
+  // Set the left-side motors to run 'reverse' as they're mounted opposite
+  frontLeft-> SetInverted(true);
+  backLeft->  SetInverted(true);
 
-  frontLeft->SetInverted(true);
-  backLeft->SetInverted(true);
+  // Set the back motors to mimic all commands sent to their respective forward motors
+  backLeft->  Set(ControlMode::Follower, frontLeft->GetDeviceID());
+  backRight-> Set(ControlMode::Follower, frontRight->GetDeviceID());
 
-  backLeft->Set(ControlMode::Follower, frontLeft->GetDeviceID());
-  backRight->Set(ControlMode::Follower, frontRight->GetDeviceID());
+  // Setup the Left- and Right-side encoders
+  frontRight->  ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  frontLeft->   ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 
-  //backRight->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-  //backLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+  // Set the constant Forward & reverse outputs (usually 0)
+  frontRight->ConfigNominalOutputForward(0, 10);  // Constant forward motor output
+  frontRight->ConfigNominalOutputReverse(0, 10);  // Constant reverse motor output
+  frontRight->ConfigPeakOutputForward( 0.6, 10);  // Max forward motor output (?)
+  frontRight->ConfigPeakOutputReverse(-0.6, 10);  // Max reverse motor output
+
+  frontLeft->ConfigNominalOutputForward(0, 10); // Like the above 4, but for the left side
+  frontLeft->ConfigNominalOutputReverse(0, 10);
+  frontLeft->ConfigPeakOutputForward( 0.6, 10);
+  frontLeft->ConfigPeakOutputReverse(-0.6, 10);
+
+  frontRight->SelectProfileSlot(0, 0);        // Choose the 0-slot PID profile
+  frontRight->Config_kF(0, DRIVETRAIN_F, 10); // Right-side PID feed-forward constant
+  frontRight->Config_kP(0, DRIVETRAIN_P, 10); // Right-side Proportional constant
+  frontRight->Config_kI(0, DRIVETRAIN_I, 10); // Integral constant
+  frontRight->Config_kD(0, DRIVETRAIN_D, 10); // Derivative constant
+
+  frontLeft->SelectProfileSlot(0, 0);         // Like the above 4, but for the Left side
+  frontLeft->Config_kF(0, DRIVETRAIN_F, 10);
+  frontLeft->Config_kP(0, DRIVETRAIN_P, 10);
+  frontLeft->Config_kI(0, DRIVETRAIN_I, 10);
+  frontLeft->Config_kD(0, DRIVETRAIN_D, 10);
   //frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-}
+} // End InitHardware
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

@@ -11,6 +11,7 @@
 #include "Commands/EncoderReset.h"
 #include "Commands/PistonBackToggle.h"
 #include "Commands/PistonFrontToggle.h"
+#include "Commands/GoForwardEncoder.h"
 OI::OI() {
 
   }
@@ -21,15 +22,18 @@ OI::OI() {
 
   double OI::getRightY(){
     return rightJoystick.GetY(frc::GenericHID::JoystickHand::kRightHand);
-  }  
+  }
+    
   void OI::InitHardware(){
     leftButton8 = new frc::JoystickButton(&leftJoystick, 8);
     leftButton7 = new frc::JoystickButton(&leftJoystick,7);
     leftButton6 = new frc::JoystickButton(&leftJoystick,6);
+    leftButton2 = new frc::JoystickButton(&leftJoystick, 2);
 
     leftButton8->WhenPressed(new PistonFrontToggle());
     leftButton6->WhenPressed(new EncoderReset());
     leftButton7->WhenPressed(new PistonBackToggle());
+    leftButton2->WhenPressed(new GoForwardEncoder(300));
   }
   // Process operator interface input here.
 
