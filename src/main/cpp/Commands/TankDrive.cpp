@@ -20,7 +20,8 @@ void commands::TankDrive::Initialize() {}
 // Called repeatedly when this Command is scheduled to run
 void commands::TankDrive::Execute()
 {
-  drivetrain->Drive(oi->getLeftY() * fabs(oi->getLeftY()), oi->getRightY() * fabs(oi->getRightY()));
+//  drivetrain->Drive((oi->getLeftY() * fabs(oi->getLeftY())), (oi->getRightY() * fabs(oi->getRightY())));
+drivetrain->Drive(oi->getLeftY(),oi->getRightY());
   //drivetrain->Drive(oi->getLeftY(),oi->getRightY());
 }
 

@@ -138,6 +138,7 @@ void Robot::UpdateStatus()
   frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());*/
  // testEntry.SetDouble(420.6969);
   frc::SmartDashboard::PutNumber("MURDER!!!",testEntry.GetDouble(0));
+  
 } // End UpdateStatus
 
 #ifndef RUNNING_FRC_TESTS

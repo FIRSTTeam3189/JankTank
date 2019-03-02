@@ -13,8 +13,10 @@
 #include <frc/Solenoid.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTable.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <frc/DigitalInput.h>
 using CANTalon = ctre::phoenix::motorcontrol::can::TalonSRX;
 using ControlMode = ctre::phoenix::motorcontrol::ControlMode;
 class Drivetrain : public frc::Subsystem
@@ -26,15 +28,15 @@ private:
   CANTalon *frontRight;
   CANTalon *backLeft;
   CANTalon *backRight;
- Piston *back_pistons;
- Piston *front_pistons;
-  frc::Solenoid* solenoid1;
+  Piston *back_pistons;
+  Piston *front_pistons;
+  frc::Solenoid *solenoid1;
+  frc::DigitalInput *limitSwitchUpper;
+  frc::DigitalInput *limitSwitchLower;
+  //  frc::ShuffleboardTab::ShuffleboardTab tab;
+  // nt::NetworkTableEntry x;
 
-//  frc::ShuffleboardTab::ShuffleboardTab tab;
- // nt::NetworkTableEntry x;
-
-
- // frc::Encoder *encoder1;
+  // frc::Encoder *encoder1;
 
 public:
   Drivetrain();
