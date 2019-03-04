@@ -12,6 +12,7 @@
 #include "Commands/PistonBackToggle.h"
 #include "Commands/PistonFrontToggle.h"
 #include "Commands/GoForwardEncoder.h"
+#include "Commands/ClimbAuto.h"
 OI::OI() {
 
   }
@@ -29,11 +30,14 @@ OI::OI() {
     leftButton7 = new frc::JoystickButton(&leftJoystick,7);
     leftButton6 = new frc::JoystickButton(&leftJoystick,6);
     leftButton2 = new frc::JoystickButton(&leftJoystick, 2);
+    leftButton3 = new frc::JoystickButton(&leftJoystick, 3);
+    rightButton3 = new frc::JoystickButton(&rightJoystick, 3);
 
-    leftButton8->WhenPressed(new PistonFrontToggle());
+    leftButton3->WhenPressed(new PistonFrontToggle());
     leftButton6->WhenPressed(new EncoderReset());
-    leftButton7->WhenPressed(new PistonBackToggle());
+    rightButton3->WhenPressed(new PistonBackToggle());
     leftButton2->WhenPressed(new GoForwardEncoder(300));
+    leftButton8->WhenPressed(new ClimbAuto());
   }
   // Process operator interface input here.
 

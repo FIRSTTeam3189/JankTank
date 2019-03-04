@@ -11,14 +11,15 @@
 #include "Commands/GoForwardEncoder.h"
 ClimbAuto::ClimbAuto() {
   // starts with bumper on tier two
-  AddSequential(new GoForwardEncoder(-20));
+  AddSequential(new GoForwardEncoder(-400));
   AddSequential(new PistonFrontToggle());
-  AddSequential(new GoForwardEncoder(40));
+  AddSequential(new GoForwardEncoder(2482));
   AddSequential(new PistonFrontToggle());
-  AddSequential(new GoForwardEncoder(100));
+  AddSequential(new GoForwardEncoder(825));
   AddSequential(new PistonBackToggle());
-  AddSequential(new GoForwardEncoder(100));
+  AddSequential(new GoForwardEncoder(1700));
   AddSequential(new PistonBackToggle());
+  AddSequential(new GoForwardEncoder(1700));
  // AddSequential()
   // Add Commands here:
   // e.g. AddSequential(new Command1());

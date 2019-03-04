@@ -51,4 +51,5 @@ public:
   void DriveDistance(double distanceL, double distanceR);
   double GetEncoderLeftDistance();
   double GetEncoderRightDistance();
+  void UpdateStatus();
 };

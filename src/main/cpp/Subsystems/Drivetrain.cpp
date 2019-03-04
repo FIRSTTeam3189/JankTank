@@ -28,8 +28,8 @@ void Drivetrain::InitDefaultCommand()
 
 void Drivetrain::Drive(double left, double right)
 {
-  backLeft-> Set(ControlMode::PercentOutput, left);
-  backRight->Set(ControlMode::PercentOutput, right);
+  frontLeft-> Set(ControlMode::PercentOutput, left);
+  frontRight->Set(ControlMode::PercentOutput, right);
   //backLeft-> Set(ControlMode::PercentOutput, left);
   //backRight->Set(ControlMode::PercentOutput, right);
   //frc::SmartDashboard::PutNumber("power",frontRight->GetActiveTrajectoryVelocity());
@@ -40,20 +40,22 @@ void Drivetrain::ToggleBackPistons() {back_pistons->Toggle();}
 void Drivetrain::ToggleFrontPistons() {front_pistons->Toggle();}
 
 //  Return the current encoder values for L and R encoders
-double Drivetrain::GetEncoderLeftDistance(){return backLeft->GetSelectedSensorPosition(0);}
-double Drivetrain::GetEncoderRightDistance(){return backRight->GetSelectedSensorPosition(0);}
+double Drivetrain::GetEncoderLeftDistance(){return frontLeft->GetSelectedSensorPosition(0);}
+double Drivetrain::GetEncoderRightDistance(){return frontRight->GetSelectedSensorPosition(0);}
 
 void Drivetrain::ResetEncoders()
 { // Set Left and Right encoders to a known value (usually 0)
-  backRight->SetSelectedSensorPosition(0, 0, 0);
-  backLeft-> SetSelectedSensorPosition(0, 0, 0);
+  frontRight->SetSelectedSensorPosition(0, 0, 0);
+  frontLeft-> SetSelectedSensorPosition(0, 0, 0);
 }
 
 void Drivetrain::DriveDistance(double distanceL, double distanceR){
   // Drive the Left- and Right-side drivetrain motors for the desired encoder counts
   
-  backLeft-> Set(ControlMode::Position,distanceL);
-  backRight->Set(ControlMode::Position,distanceR);
+  frontLeft-> Set(ControlMode::Position,distanceL);
+  frontRight->Set(ControlMode::Position,distanceR);
+  // backLeft-> Set(ControlMode::Position,distanceL);
+  // backRight->Set(ControlMode::Position,distanceR);
 }
 
 void Drivetrain::InitHardware()
@@ -66,31 +68,39 @@ void Drivetrain::InitHardware()
   backLeft =    new CANTalon(DRIVE_LEFT_BACK);
   backRight =   new CANTalon(DRIVE_RIGHT_BACK);
 
+  frontLeft->ConfigFactoryDefault();
+  frontRight->ConfigFactoryDefault();
+  backLeft->ConfigFactoryDefault();
+  backRight->ConfigFactoryDefault();
+
   back_pistons =  new PistonDouble(PISTON_BACK_EXTEND, PISTON_BACK_RETRACT);
   front_pistons = new PistonDouble(PISTON_FRONT_EXTEND, PISTON_FRONT_RETRACT);
 
   // Set the left-side motors to run 'reverse' as they're mounted opposite
   frontLeft-> SetInverted(true);
   //backLeft->  SetInverted(true);
-  frontRight -> SetInverted(true);
+  backLeft -> SetInverted(true);
   // Set the back motors to mimic all commands sent to their respective forward motors
-  frontLeft->  Set(ControlMode::Follower, backLeft->GetDeviceID());
-  frontRight-> Set(ControlMode::Follower, backRight->GetDeviceID());
+  backLeft->  Set(ControlMode::Follower, backLeft->GetDeviceID());
+  backRight-> Set(ControlMode::Follower, backRight->GetDeviceID());
 
   // Setup the Left- and Right-side encoders
   frontRight->  ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
   frontLeft->   ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-/*
-  // Set the constant Forward & reverse outputs (usually 0)
-  frontRight->ConfigNominalOutputForward(0, 10);  // Constant forward motor output
-  frontRight->ConfigNominalOutputReverse(0, 10);  // Constant reverse motor output
-  frontRight->ConfigPeakOutputForward( 0.6, 10);  // Max forward motor output (?)
-  frontRight->ConfigPeakOutputReverse(-0.6, 10);  // Max reverse motor output
 
-  frontLeft->ConfigNominalOutputForward(0, 10); // Like the above 4, but for the left side
-  frontLeft->ConfigNominalOutputReverse(0, 10);
-  frontLeft->ConfigPeakOutputForward( 0.6, 10);
-  frontLeft->ConfigPeakOutputReverse(-0.6, 10);
+  frontRight->SetSensorPhase(true);
+  frontLeft->SetSensorPhase(true);
+
+  // // Set the constant Forward & reverse outputs (usually 0)
+  // frontRight->ConfigNominalOutputForward(0, 10);  // Constant forward motor output
+  // frontRight->ConfigNominalOutputReverse(0, 10);  // Constant reverse motor output
+  // frontRight->ConfigPeakOutputForward( 0.3, 10);  // Max forward motor output (?)
+  // frontRight->ConfigPeakOutputReverse(-0.3, 10);  // Max reverse motor output
+
+  // frontLeft->ConfigNominalOutputForward(0, 10); // Like the above 4, but for the left side
+  // frontLeft->ConfigNominalOutputReverse(0, 10);
+  // frontLeft->ConfigPeakOutputForward( 0.3, 10);
+  // frontLeft->ConfigPeakOutputReverse(-0.3, 10);
 
   frontRight->SelectProfileSlot(0, 0);        // Choose the 0-slot PID profile
   frontRight->Config_kF(0, DRIVETRAIN_F, 10); // Right-side PID feed-forward constant
@@ -104,11 +114,15 @@ void Drivetrain::InitHardware()
   frontLeft->Config_kI(0, DRIVETRAIN_I, 10);
   frontLeft->Config_kD(0, DRIVETRAIN_D, 10);
 
-  frontLeft->ConfigForwardLimitSwitchSource(ctre::phoenix::motorcontrol::RemoteLimitSwitchSource_RemoteTalonSRX, LimitSwitchNormal::LimitSwitchNormal_NormallyOpen, 0, 10);
+ // frontLeft->ConfigForwardLimitSwitchSource(ctre::phoenix::motorcontrol::RemoteLimitSwitchSource_RemoteTalonSRX, LimitSwitchNormal::LimitSwitchNormal_Disabled, 0, 10);
   //  Sets the motor to stop when the top limit switch is triggered. Needs testinf because ^
-  frontLeft->ConfigReverseLimitSwitchSource(ctre::phoenix::motorcontrol::RemoteLimitSwitchSource_RemoteTalonSRX, LimitSwitchNormal::LimitSwitchNormal_NormallyOpen, 1, 10);
-  */
+//  frontLeft->ConfigReverseLimitSwitchSource(ctre::phoenix::motorcontrol::RemoteLimitSwitchSource_RemoteTalonSRX, LimitSwitchNormal::LimitSwitchNormal_Disabled, 1, 10);
+  
   //frontLeft->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 } // End InitHardware
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
+void Drivetrain::UpdateStatus(){
+  frc::SmartDashboard::PutNumber("leftSpeed",frontLeft->GetMotorOutputPercent());
+  frc::SmartDashboard::PutNumber("rightSpeed",frontRight->GetMotorOutputPercent());
+}

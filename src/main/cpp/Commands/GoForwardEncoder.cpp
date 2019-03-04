@@ -14,6 +14,8 @@
 GoForwardEncoder::GoForwardEncoder(double inputDistance) : CommandBase("GoForwardEncoder") {
   Requires(CommandBase::drivetrain.get());
   this->desiredDistance = inputDistance;//if you want inches, reinstate this line.: * TICKS_PER_REVOLUTION;
+  desiredDistanceL = desiredDistance;
+  desiredDistanceR = desiredDistance;
   // Use Requires() here to declare subsystem dependencies
   // eg. Requires(Robot::chassis.get());
 } // End Constructor
@@ -26,13 +28,14 @@ void GoForwardEncoder::Initialize() {
 
   std::cout << "\n\nBeginning PID movement.\nDesired setpoints: " << std::endl;
   std::cout << "Left: " << desiredDistanceL << "\nRight: " << desiredDistanceR << std::endl;
-
+  
   CommandBase::drivetrain->DriveDistance(desiredDistanceL, desiredDistanceR);
 } // End Initialize
 
 // Called repeatedly when this Command is scheduled to run
 void GoForwardEncoder::Execute() {
  // CommandBase::drivetrain->Drive(AUTO_FORWARD_SPEED,AUTO_FORWARD_SPEED);
+   CommandBase::drivetrain->DriveDistance(desiredDistanceL, desiredDistanceR);
 } // End Execute
 
 // Make this return true when this Command no longer needs to run execute()
@@ -51,6 +54,7 @@ bool GoForwardEncoder::IsFinished() {
 
 // Called once after isFinished returns true
 void GoForwardEncoder::End() {
+  std::cout << "Ended GoForwardEncoder" << std::endl;
   CommandBase::drivetrain->Drive(0,0);
 }
 

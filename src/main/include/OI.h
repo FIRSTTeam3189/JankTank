@@ -25,4 +25,6 @@ private:
   frc::JoystickButton *leftButton7;
   frc::JoystickButton *leftButton6;
   frc::JoystickButton *leftButton2;
+  frc::JoystickButton *leftButton3;
+  frc::JoystickButton *rightButton3;
 };

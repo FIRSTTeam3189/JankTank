@@ -50,13 +50,14 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-  tickCount++;
-  if (tickCount == 25)
-  { // Only update every few ticks. Note that each tick is ~20ms.
-    std::cout << "\nLeft Encoder: " << CommandBase::drivetrain->GetEncoderLeftDistance() << std::endl;
-    std::cout << "Right Encoder: "  << CommandBase::drivetrain->GetEncoderRightDistance() << std::endl;
-    tickCount = 0;
-  }
+ 
+  // tickCount++;
+  // if (tickCount == 40)
+  // { // Only update every few ticks. Note that each tick is ~20ms.
+  //   std::cout << "\nLeft Encoder: " << CommandBase::drivetrain->GetEncoderLeftDistance() << std::endl;
+  //   std::cout << "Right Encoder: "  << CommandBase::drivetrain->GetEncoderRightDistance() << std::endl;
+  //   tickCount = 0;
+  // }
 } // End RobotPeriodic
 
 /**
@@ -90,7 +91,7 @@ void Robot::AutonomousInit()
   // if (autoSelected == "My Auto") {
   //   m_autonomousCommand = &m_myAuto;
   // } else {
-  //   m_autonomousCommand = &m_defaultAuto;
+  //   m_autonomousCommand = &m_defaultAFuto;
   // }
 
   if (m_autonomousCommand != nullptr)
@@ -138,7 +139,9 @@ void Robot::UpdateStatus()
   frc::SmartDashboard::PutNumber("Dev's special encoder buddy", CommandBase::drivetrain->GetEncoder());*/
  // testEntry.SetDouble(420.6969);
   frc::SmartDashboard::PutNumber("MURDER!!!",testEntry.GetDouble(0));
-  
+  frc::SmartDashboard::PutNumber("leftEncoder",CommandBase::drivetrain->GetEncoderLeftDistance());
+  frc::SmartDashboard::PutNumber("rightEncoder",CommandBase::drivetrain->GetEncoderRightDistance());
+  CommandBase::drivetrain->UpdateStatus();
 } // End UpdateStatus
 
 #ifndef RUNNING_FRC_TESTS

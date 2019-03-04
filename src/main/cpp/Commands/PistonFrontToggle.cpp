@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Commands/PistonFrontToggle.h"
+#include <iostream>
 
 PistonFrontToggle::PistonFrontToggle() : CommandBase("PistonFrontToggle") {
   Requires(CommandBase::drivetrain.get());
@@ -17,6 +18,7 @@ PistonFrontToggle::PistonFrontToggle() : CommandBase("PistonFrontToggle") {
 void PistonFrontToggle::Initialize()
 {
   drivetrain->ToggleFrontPistons();
+  std::cout << "Started PistonFrontToggle" << std::endl;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -26,7 +28,9 @@ void PistonFrontToggle::Execute() {}
 bool PistonFrontToggle::IsFinished() { return true; }
 
 // Called once after isFinished returns true
-void PistonFrontToggle::End() {}
+void PistonFrontToggle::End() {
+  std::cout << "Ended PistonFrontToggle" << std::endl;
+}
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run

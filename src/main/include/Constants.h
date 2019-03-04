@@ -14,7 +14,7 @@ constexpr double BAUD_RATE = 115200;
 constexpr int TICKS_PER_REVOLUTION = 160;
 
 constexpr double DRIVETRAIN_F  = 0.0;
-constexpr double DRIVETRAIN_P = 2.5;
+constexpr double DRIVETRAIN_P = 0.1;
 constexpr double DRIVETRAIN_I = 0.0; 
-constexpr double DRIVETRAIN_D = 2.5;
+constexpr double DRIVETRAIN_D = 0;
 constexpr double DRIVETRAIN_PID_TOLERANCE = 10;

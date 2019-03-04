@@ -6,54 +6,86 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Utils/UartServer.h"
-#include "Constants.h"
+#include <iostream>
+
+#include <frc/smartdashboard/SmartDashboard.h>
+//#include "Constants.h"
 
 namespace Utils
 {
 UartServer::UartServer()
 {
-    Uart = new frc::SerialPort(BAUD_RATE, frc::SerialPort::Port::kMXP);
 }
 
-void UartServer::recieveData(std::queue<char> *queue, VisionData *Data, bool *running, frc::SerialPort *uart)
+void UartServer::recieveData(frc::SerialPort *uart, VisionData *data, bool *running, std::chrono::milliseconds *time)
 {
-
-    while (running)
+    int count = 0;
+    std::vector<char> localBuffer;
+    int state = BUFFER_STATE_WAIT_FOR_SYNC;
+    char rawData[sizeof(VisionData) + sizeof(SYNC_BYTES) + sizeof(TAIL_BYTE)];
+    while (*running)
     {
-        //getting the raw data from the uart
-        char *raw;
-        int size = uart->Read(raw, sizeof(VisionData));
-        //fills up the que with the raw data
+        // Clear out rawData via memset here.
+        memset(&rawData[0], 0, sizeof(rawData));
+        int size = uart->Read(rawData, sizeof(VisionData)); // Sizeof(VisionData) should be the sizeof the localBuffer you're storing into
+        frc::SmartDashboard::PutNumber("UARTcount ", count);
+        //fills up the que with the rawData data
         for (int i = 0; i < size; i++)
         {
-            queue->push(raw[i]);
+            count++;
+            std::cout << rawData[i] << std::endl;
+            localBuffer.push_back(rawData[i]);
         }
-        //checks whether the front byte is the sync byte and forgets it if it isn't
-        while ((!queue->empty()) && !(queue->front() == SYNC_BYTES))
+        switch (state)
         {
-            queue->pop();
-        }
-
-        //checks to see if the data we are getting is good then fills a tempory array with queue if it is
-        if (!queue->empty() && queue->front() == SYNC_BYTES && queue->size() - 1 == sizeof(VisionData))
-        {
-            queue->pop();
-            char temp[sizeof(VisionData)];
-            for (int i = 0; i < sizeof(VisionData); i++)
+        case BUFFER_STATE_WAIT_FOR_SYNC:
+            //checks to see if we have enough bytes to check and breaks the scope if we do
+            if (localBuffer.size() < sizeof(SYNC_BYTES))
             {
-                temp[i] = queue->front();
-                queue->pop();
+                break;
             }
-            //parses temp array into a VisionData type and makes myData equal to it
-            *(Data) = *((VisionData *)temp);
+            if (localBuffer[0] == SYNC_BYTES[0] && localBuffer[1] == SYNC_BYTES[1])
+            {
+                localBuffer.erase(localBuffer.begin(), localBuffer.begin() + 2);
+                state = BUFFER_STATE_WAIT_FOR_TAIL;
+            }
+            else
+            {
+                localBuffer.erase(localBuffer.begin());
+            }
+            break;
+        case BUFFER_STATE_WAIT_FOR_TAIL:
+            std::cout << "tail" << std::endl;
+            int messageSize = sizeof(VisionData) + sizeof(TAIL_BYTE);
+            if (localBuffer.size() < messageSize)
+            {
+                break;
+            }
+            if (localBuffer[messageSize - 2] == TAIL_BYTE[0] && localBuffer[messageSize - 1] == TAIL_BYTE[1])
+            { // remember the size is a bigger number than the last index
+                //*(time) = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+
+                //copies the data directly from localBuffer to data  b
+                memcpy(data, localBuffer.data(), sizeof(VisionData));
+
+                //TODO remove bytes that have been processed
+                localBuffer.erase(localBuffer.begin(), localBuffer.begin() + messageSize);
+                state = BUFFER_STATE_WAIT_FOR_SYNC;
+                break;
+            }
         }
     }
 }
 
 void UartServer::start()
 {
-    std::thread t(&recieveData, queue, myData, running, Uart);
-    myThread = &t;
+    UartServer::Uart = new frc::SerialPort(115200, frc::SerialPort::Port::kMXP);
+    UartServer::data = new VisionData();
+    UartServer::running = new bool;
+    *(UartServer::running) = true;
+    UartServer::thread = nullptr;
+    static std::thread t(&recieveData, Uart, data, running, lastRecieved);
+    UartServer::thread = &t;
 }
 
 void UartServer::stop()
@@ -63,7 +95,13 @@ void UartServer::stop()
 
 VisionData UartServer::getData()
 {
-    return *myData;
+    return *UartServer::data;
+}
+
+UartServer &UartServer::getInstance()
+{
+    static UartServer i;
+    return i;
 }
 
 } // namespace Utils
